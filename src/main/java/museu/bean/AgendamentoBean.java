@@ -33,6 +33,7 @@ public class AgendamentoBean implements Serializable {
 
     private Long museuId;
     private Long horarioId;
+    private Long museuIdDosHorarios;
     private String dataInformada;
 
     private List<SelectItem> museus;
@@ -66,6 +67,7 @@ public class AgendamentoBean implements Serializable {
 
     public void carregarHorarios() {
         horarioId = null;
+        museuIdDosHorarios = null;
         horarios = List.of();
 
         if (museuId == null) {
@@ -79,11 +81,13 @@ public class AgendamentoBean implements Serializable {
                     .map(horario -> new OpcaoHorario(
                             horario.getId(), horario.getHoraInicio()))
                     .toList();
+
+            museuIdDosHorarios = museuId;
         } finally {
             manager.close();
         }
     }
-
+  
     public void validarSelecao() {
         LocalDate data;
         try {
@@ -104,7 +108,7 @@ public class AgendamentoBean implements Serializable {
                 .findFirst()
                 .orElse(null);
 
-        if (museuId == null || horario == null) {
+        if (museuId == null || !museuId.equals(museuIdDosHorarios) || horario == null) {
             exibirMensagem(FacesMessage.SEVERITY_ERROR,
                     "Selecione o museu e um horário desse museu.");
             return;
