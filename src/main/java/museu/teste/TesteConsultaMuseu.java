@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 import museu.dao.DaoGenerico;
+import museu.dao.HorarioMuseuDAO;
+import museu.modelo.HorarioMuseu;
 import museu.modelo.Museu;
 import museu.util.JPAUtil;
 
@@ -31,7 +33,23 @@ public class TesteConsultaMuseu {
             	    System.out.println(museu.getNome() + " - "
             	            + museu.getCapacidadePorHorario() + " vagas por horário");
             	}
-                
+            	
+            	HorarioMuseuDAO daoHorarios = new HorarioMuseuDAO(manager);
+
+            	for (Museu museu : museus) {
+
+            	    System.out.println("\n" + museu.getNome());
+
+            	    List<HorarioMuseu> horarios =
+            	            daoHorarios.listarPorMuseu(museu.getId());
+
+            	    System.out.println("Total de horarios: " + horarios.size());
+
+            	    for (HorarioMuseu horario : horarios) {
+            	        System.out.println(horario.getHoraInicio());
+            	    }
+            	}
+
             } finally {
                 manager.close();
             }
